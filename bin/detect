@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# bin/detect <build-dir>
+
+BP=$(dirname "$(dirname $0)")
+echo "h3sdk-buildpack "$(cat "$BP/VERSION")""
+exit 0

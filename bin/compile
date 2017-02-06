@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+set -e
+set -o pipefail   # dont ignore exit codes when piping output
+set -o nounset    # fail on unset variables
+unset GIT_DIR     # Avoid GIT_DIR leak from previous build steps
+
+### Configure directories
+
+BUILD_DIR=${1:-}
+CACHE_DIR=${2:-}
+ENV_DIR=${3:-}
+BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
+
+# CF Common
+export BUILDPACK_PATH=$BP_DIR
+
+header() {
+  echo "" || true
+  echo "-----> $*" || true
+}
+
+TAR_FILENAME="${SDK_TARGET}.tar.gz"
+CHECKSUM_FILENAME="sha256sum_$SDK_TARGET"
+
+cd $CACHE_DIR
+
+header "Downloading checksum for $SDK_TARGET"
+curl $SDK_URL/$CHECKSUM_FILENAME > $CACHE_DIR/$CHECKSUM_FILENAME
+
+if ! sha256sum -c $CHECKSUM_FILENAME | grep -q "OK";
+then
+    header "Checksum mismatch or file not found ... downloading $TAR_FILENAME"
+    curl $SDK_URL/$TAR_FILENAME > $CACHE_DIR/$TAR_FILENAME
+fi
+
+header "Unpack $TAR_FILENAME"
+cd $BUILD_DIR
+tar -xzf $CACHE_DIR/$TAR_FILENAME
