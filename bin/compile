@@ -32,9 +32,14 @@ curl $SDK_URL/$CHECKSUM_FILENAME > $CACHE_DIR/$CHECKSUM_FILENAME
 if ! sha256sum -c $CHECKSUM_FILENAME | grep -q "OK";
 then
     header "Checksum mismatch or file not found ... downloading $TAR_FILENAME"
-    curl $SDK_URL/$TAR_FILENAME > $CACHE_DIR/$TAR_FILENAME
+    rm -rf $CACHE_DIR/$SDK_TARGET
+    mkdir $CACHE_DIR/$SDK_TARGET
+    cd $CACHE_DIR/$SDK_TARGET
+    curl $SDK_URL/$TAR_FILENAME | tar xz
 fi
 
-header "Unpack $TAR_FILENAME"
-cd $BUILD_DIR
-tar -xzf $CACHE_DIR/$TAR_FILENAME
+header "Cache SDK content"
+ls -lah $CACHE_DIR/$SDK_TARGET
+
+header "Installing sdk files from $TAR_FILENAME"
+mv $CACHE_DIR/$SDK_TARGET/* $BUILD_DIR
