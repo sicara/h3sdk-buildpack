@@ -26,6 +26,10 @@ CHECKSUM_FILENAME="sha256sum_$SDK_TARGET"
 
 cd $CACHE_DIR
 
+# Temporary fix
+header "Clearing cache"
+rm -rf $CACHE_DIR/*
+
 header "Downloading checksum for $SDK_TARGET"
 curl $SDK_URL/$CHECKSUM_FILENAME > $CACHE_DIR/$CHECKSUM_FILENAME
 
@@ -38,8 +42,13 @@ then
     curl $SDK_URL/$TAR_FILENAME | tar xz
 fi
 
-header "Cache SDK content"
-ls -lah $CACHE_DIR/$SDK_TARGET
+header "Cache content"
+echo ""
+echo $CACHE_DIR
+ls -la $CACHE_DIR
+echo ""
+echo $CACHE_DIR/$SDK_TARGET
+ls -la $CACHE_DIR/$SDK_TARGET
 
 header "Installing sdk files from $TAR_FILENAME"
 mv $CACHE_DIR/$SDK_TARGET/* $BUILD_DIR
