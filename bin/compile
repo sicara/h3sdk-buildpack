@@ -24,6 +24,7 @@ header() {
 TAR_FILENAME="${SDK_TARGET}.tar.gz"
 CHECKSUM_FILENAME="sha256sum_$SDK_TARGET"
 
+mkdir -p $CACHE_DIR
 cd $CACHE_DIR
 
 # Temporary fix
