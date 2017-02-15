@@ -27,10 +27,6 @@ CHECKSUM_FILENAME="sha256sum_$SDK_TARGET"
 mkdir -p $CACHE_DIR
 cd $CACHE_DIR
 
-# Temporary fix
-header "Clearing cache"
-rm -rf $CACHE_DIR/*
-
 header "Downloading checksum for $SDK_TARGET"
 curl $SDK_URL/$CHECKSUM_FILENAME > $CACHE_DIR/$CHECKSUM_FILENAME
 
@@ -52,4 +48,6 @@ echo $CACHE_DIR/$SDK_TARGET
 ls -la $CACHE_DIR/$SDK_TARGET
 
 header "Installing sdk files from $TAR_FILENAME"
-mv $CACHE_DIR/$SDK_TARGET/* $BUILD_DIR
+# TODO: find a way to remove --remove-source-files flag so that sdk is cached
+# The current issue is the disk size limit (python sdk ~1.4Go)
+rsync -ahu --inplace --remove-source-files $CACHE_DIR/$SDK_TARGET/ $BUILD_DIR/
