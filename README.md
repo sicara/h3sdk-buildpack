@@ -4,7 +4,7 @@ This is a [Cloud Foundry builpack](https://docs.cloudfoundry.org/buildpacks/) th
 
 ## Usage:
 
-Your should provided the following env vars:
+Your should provide the following env vars:
 
 - `SDK_URL`: the url where the tarball should be downloaded
 - `SDK_TARGET`: the name of the tarball file
